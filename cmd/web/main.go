@@ -12,6 +12,11 @@ type config struct {
 	staticDir string
 }
 
+type application struct {
+	logger *slog.Logger
+	config config
+}
+
 func main() {
 	var cfg config
 
@@ -24,19 +29,14 @@ func main() {
 		Level: slog.LevelDebug,
 	}))
 
-	mux := http.NewServeMux()
-
-	fileServer := http.FileServer(http.Dir(cfg.staticDir))
-	mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))
-
-	mux.HandleFunc("GET /{$}", home)
-	mux.HandleFunc("GET /snippet/view/{id}", snippetView)
-	mux.HandleFunc("GET /snippet/create", snippetCreate)
-	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
+	app := &application{
+		logger: logger,
+		config: cfg,
+	}
 
 	logger.Info("starting server", slog.String("addr", cfg.addr))
 
-	err := http.ListenAndServe(cfg.addr, mux)
+	err := http.ListenAndServe(cfg.addr, app.routes())
 	logger.Error(err.Error())
 	os.Exit(1)
 }
