@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 
+	"snippetbox.dekutyavin.net/internal/models"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -19,6 +21,7 @@ type config struct {
 type application struct {
 	logger *slog.Logger
 	config config
+	snippets *models.SnippetModel
 }
 
 func main() {
@@ -44,6 +47,7 @@ func main() {
 	app := &application{
 		logger: logger,
 		config: cfg,
+		snippets: &models.SnippetModel{DB: db},
 	}
 
 	logger.Info("starting server", slog.String("addr", cfg.addr))
