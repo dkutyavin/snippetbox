@@ -10,6 +10,7 @@ import (
 
 	"snippetbox.dekutyavin.net/internal/models"
 
+	"github.com/go-playground/form/v4"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -20,10 +21,11 @@ type config struct {
 }
 
 type application struct {
-	logger    *slog.Logger
-	config    config
-	snippets  *models.SnippetModel
-	templates map[string]*template.Template
+	logger      *slog.Logger
+	config      config
+	snippets    *models.SnippetModel
+	templates   map[string]*template.Template
+	formDecoder *form.Decoder
 }
 
 func main() {
@@ -53,10 +55,11 @@ func main() {
 	}
 
 	app := &application{
-		logger:    logger,
-		config:    cfg,
-		snippets:  &models.SnippetModel{DB: db},
-		templates: templatesCache,
+		logger:      logger,
+		config:      cfg,
+		snippets:    &models.SnippetModel{DB: db},
+		templates:   templatesCache,
+		formDecoder: form.NewDecoder(),
 	}
 
 	logger.Info("starting server", slog.String("addr", cfg.addr))
