@@ -83,3 +83,15 @@ func (m *SnippetModel) Latest() ([]Snippet, error) {
 
 	return snippets, nil
 }
+
+func (m *SnippetModel) Count() (int, error) {
+	stmt := `SELECT COUNT(*) FROM snippets`
+
+	var count int
+	err := m.DB.QueryRow(stmt).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
