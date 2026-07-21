@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"html/template"
 	"log/slog"
 	"net/http"
@@ -67,6 +68,9 @@ func main() {
 		Addr:     cfg.Addr,
 		Handler:  app.routes(),
 		ErrorLog: slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		TLSConfig: &tls.Config{
+			CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
+		},
 	}
 
 	logger.Info("starting server", slog.String("addr", cfg.Addr))
