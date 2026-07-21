@@ -71,6 +71,9 @@ func main() {
 		TLSConfig: &tls.Config{
 			CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
 		},
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	logger.Info("starting server", slog.String("addr", cfg.Addr))
