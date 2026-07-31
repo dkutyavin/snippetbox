@@ -8,19 +8,16 @@ import (
 )
 
 type Config struct {
-	Addr      string
-	StaticDir string
-	DSN       string
+	Addr string
+	DSN  string
 }
 
 const defaultAddr = ":4000"
-const defaultStaticDir = "./ui/static"
 
 func NewConfig() (Config, error) {
 	var cfg Config
 
 	flag.StringVar(&cfg.Addr, "addr", getAddr(), "HTTP network address")
-	flag.StringVar(&cfg.StaticDir, "staticDir", getStaticDir(), "Path to ui assets directory")
 	flag.StringVar(&cfg.DSN, "dsn", getDsn(), "MySQL data source name")
 
 	flag.Parse()
@@ -37,16 +34,6 @@ func getAddr() string {
 
 	if fromEnv == "" {
 		return defaultAddr
-	}
-
-	return fromEnv
-}
-
-func getStaticDir() string {
-	fromEnv := os.Getenv("STATIC_DIR")
-
-	if fromEnv == "" {
-		return defaultStaticDir
 	}
 
 	return fromEnv
