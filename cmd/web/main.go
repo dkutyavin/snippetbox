@@ -21,9 +21,9 @@ import (
 type application struct {
 	logger         *slog.Logger
 	config         config.Config
-	snippets       *models.SnippetModel
-	users          *models.UserModel
-	templates      map[string]*template.Template
+	snippets       models.SnippetModelInterface
+	users          models.UserModelInterface
+	templateCache  map[string]*template.Template
 	formDecoder    *form.Decoder
 	sessionManager *scs.SessionManager
 }
@@ -61,7 +61,7 @@ func main() {
 		config:         cfg,
 		snippets:       &models.SnippetModel{DB: db},
 		users:          &models.UserModel{DB: db},
-		templates:      templatesCache,
+		templateCache:  templatesCache,
 		formDecoder:    form.NewDecoder(),
 		sessionManager: sessionManager,
 	}
